@@ -188,21 +188,132 @@ PHP.ini中,去掉"extension=php_pdo.dll"前面的";"号,若要连接数据库，
 
 **ps**.主键索引跟唯一索引的区别
 
-TODO: https://m.php.cn/article/480437.html
-      https://blog.csdn.net/qq_44129924/article/details/115333658
-
 1. 主键是一种约束，唯一索引是一种索引；
-
 1. 主键创建后一定包含一个唯一性索引，唯一性索引不一定是主键；
-
 1. 唯一性索引列允许空值， 主键不允许；
-
 1. 主键可被其他表引为外键，唯一索引不能；
-
 1. 一个表只能创建一个主键，但可创建多个唯一索引。
+1. 主键更适合那些不容易改变的唯一标识，如自动递增列，身份证号等。
+1. 在**RBO 模式**下，主键的执行计划优先级高于唯一索引。两者可以提高查询的速度。--oracle
+
+
 
 **2.索引的优劣势？**
 
+	优势： 
+		检索:可以提高数据检索的效率，降低数据库的IO成本
+		排序:通过索引列对数据进行排序，降低了CPU的消耗
+	劣势: 
+		占磁盘空间
+		降低更新表的效率
+
+**3.索引分类**
+
+1. 单列索引
+	- 普通索引：没有任何限制。add index
+	- 唯一索引:索引列中的值必须唯一，允许空值。add unique index
+	- 主键索引:特殊的唯一索引，不允许空值。PK
+1. 组合索引
+	- 在表中的对个字段组合上创建的索引 add index(col1, col2……)
+	- 遵循最左前缀原则(最左匹配原则)
+1. 全文索引(MyISAM,InnoDB5.6以后)
+	- 只能在CHAR,VARCHAR,TEXT类型字段上使用全文索引。fulltext
+	- 优先级最高，先执行
+	- 存储索引，决定执行一个索引
+1. 空间索引
+
+**PS.**在 MySQL 中, 索引是在存储引擎层实现的, 所以并没有统一的索引标准, 由于 InnoDB 存储引擎在 MySQL数据库中使用最为广泛, 下面以 InnoDB 为例来分析一下其中的索引模型.在 InnoDB 中, 表都是根据主键顺序以索引的形式存放的, InnoDB 使用了 B+ 树索引模型，所以数据都是存储在 B+ 树中的，如下图所示
+
+![](./images/B+tree.png)
+
+从图中可以看出, 根据叶子节点内容不同,索引类型分为**主键索引**和**非主键索引**.
+**主键索引也被称为聚簇索引**,叶子节点存放的是整行数据; 而**非主键索引** 被称为二级索引,**叶子节点存放的是主键的值**.
+如果根据主键查询, 只需要搜索ID这颗B+树
+而如果通过非主键索引查询, 需要先搜索k索引树, 找到对应的主键, 然后再到ID索引树搜索一次, 这个过程叫做回表.
+**总结, 非主键索引的查询需要多扫描一颗索引树, 效率相对更低.**
+
+**关于B+树**
+数据结构...
+
+**4.索引使用**
+
+1.索引相关语句
+
+主键索引不需要创建，系统会自动生成
+
+①.单列索引之普通索引
+
+    create index index_name on table(coloumn(length));
+	alter table table_name add index index_name(column(length));
+
+②.单列索引之唯一索引
+
+	create unique index index_name on table(column(length));
+	alter table table_name add unique index index_name(column);
+
+③.单列索引之全文索引
+
+	create fulltext index index_name on table(column(length));
+	alter table table_name add fulltext index_name(column);
+
+④.组合索引
+
+	alter table table_name add index index_name(time(50),title(50)...);
+
+⑤.删除索引
+
+	drop index index_name on table;
+
+⑥.查看索引
+	
+	show index from table_name;
+
+**5.索引原理分析**
+
+5.1 索引的存储结构
+
+- 索引在存储引擎中实现(不同的引擎会只用不同的索引)
+- MyISAM和InnoDB存储引擎:只支持B+tree索引
+- MEMORY/HEAP存储引擎:支持HSAH和BTREE索引
+
+	`MyISAM采用的是非聚簇索引，InnoDB采用的是聚簇索引`
+
+①.B树
+
+- B树的高度一般在2-4，树的高度直接影响IO读写的次数
+- 三层树结构----支撑的数据可以达到20G,如果是四层树结构----支撑的数据可以达到几十T
+
+②.B树和B+树的区别
+
+- B树和B+树最大区别在于非叶子节点是否存储数据的问题。
+
+    `由于B树的其他子节点也存储有数据data，所以在每页中占用了相当一部分内存，而B+树只有主键索引，没有数据data域，每页((4kB,8KB,16KB)存储的主键索引相对来说是比较多的。`
+
+
+5.2 聚集(簇)索引(InnoDb)
+
+- 主键索引(聚集索引)的叶子结点会存储数据行，也就是说数据和索引在一起
+- 辅助索引只会存储主键值
+
+5.3 非聚集(簇)索引(MyISAM)
+
+- B+树叶子结点只会存储数据行（数据文件）的指针，简单来说就是数据和索引不在一起
+- 非聚集索引包含 主键索引 和 辅助索引 到会存储指针的值
+
+5.4 主键索引Primary key
+
+- InnoDB要求表必须有主键(MyISAM可以没有)，如果没有，MySQL系统会自动选择一个唯一标识数据记录的列作为主键
+- MyISAM的索引文件(mdi）仅仅保存数据记录的地址
+- MyISAM的数据文件(ibd)中记录对应的记录
+
+5.5 辅助索引Secondary key(次要索引)
+
+- 结构和主键搜索引没有任何区别
+- 同样用B+Tree,data域存储相应记录主键的值而不是地址
+
+聚集索引通过主键搜索十分高效，但是辅助索引搜索需要检索两边索引：首先检索辅助索引获得主键，然后用主键到主索引中检索获得记录。
+
+	TODO:https://blog.csdn.net/qq_44129924/article/details/115333658
 
 ## SQL优化 ##
 
@@ -213,7 +324,6 @@ TODO: https://m.php.cn/article/480437.html
 - 事务设置手动提交，MySQL默认是自动提交，意味着每写一个SQL事务就自动提交，可能会频繁的涉及事务开始和提交，所以建议手动提交
 
 **2.order dy优化**
-
 
 - Using filesort：通过表的索引或者全表扫描，读取到满足条件的数据行，然后在排序缓冲区 sort buffer 中完成排序，所以返回的数据不是通过索引直接返回的，这样的排序形式就叫filesort
 
