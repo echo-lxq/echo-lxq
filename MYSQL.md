@@ -154,7 +154,7 @@ PHP-MySQL 是 PHP 操作 MySQL 资料库最原始的 Extension
 
 PHP-MySQLi 的 i 代表 Improvement ，提更了相对进阶的功能，就 Extension 而言，本身也增加了安全性。
 
-PDO (PHP Data Object) 则是提供了一个 Abstraction Layer 来操作数据库。
+PDO (PHP Data Object) 则是提供了一个 Abstraction Layer 来操作数据库。只需要使用**PDO接口**中的方法就可以对数据库进行操作
 
 PDO配置 
 PHP.ini中,去掉"extension=php_pdo.dll"前面的";"号,若要连接数据库，还需要去掉与PDO相关的数据库扩展前面的";"号，然后重启Apache服务器即可。
