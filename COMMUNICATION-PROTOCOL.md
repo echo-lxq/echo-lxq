@@ -82,18 +82,54 @@ TCP只能保证自己最大的可能，把数据有序地发送给对方。但**
  总之：发送方没有收到对应的应答。则认为对方没有收到数据 -- **超时重传机制**
 
 **3.TCP协议的header格式**<br>
-https://blog.csdn.net/qq_57574258/article/details/123024217
+![](./images/tcp_segment.png)
 
+1. 和UDP不同，TCP的header**不是定长**的。
+1. 哪个或者哪些字段，可以保证接收方的**TCP协议栈进行解包**工作？<br>
+**4位的header长度**
+1. 根据源port+目标port做分用
+1. 到目前为止，TCP发送的segment有两种：（1.**携带数据**segment 2.**应答** segment），TCP协议并没有把两种作用的segment进行不同格式的设计，而是进行**统一的设置**了！<br>
+那具体怎么区分本次segment**是否具有应答**的作用呢？<br>
+**ack == 1时segment有应答功能；ack==0时segment没有应答功能**
+1. segment的可能情况(1)光携带数据；(2)携带数据+应答(网络中合并数据发送，可以提高网络发送的效率)
+1. 32位序号：SN(sequence Number)<br>
+32位确认序号：ASN(AckNowledge Sequence Number)
 
+**4.SN和ASN书写规则**<br>
 
+1. TCP为发送每个字节都进行**编号**(只是payload，没有header) [h e l l o]<br>
+**h:108(随便选的)，e:109 ，l:110 ，l:111 ，0:112** 
+1. **TCP协议栈**在建立链接时，会**随机一个初识序列号**(Initial Sequence Number ISN)**ISN:108**
+1. 发送的时候，header中的**SN**填写的是payload中的**第一个字节的序列号**<br>
+**[hello]<br>
+SN:108<br>**
+接收方是知道长度是5的，所以，接收方如果**收到数据**，则表示**108-112**已经全部收到了
+1. ASN应该如何填写？**填写的是接收方期望收到的下一个字节的数据**<br>
+上述例子中，**接收方要应答的话ASN应该填写113**。隐含的意思就是113之前的所有数据，已经全部接收到了。
+![](./images/tcp_segment_trans.png)
 
+5. 如果发送方**超过一定时间都没有收到应答**，则可能
 
+![](./images/tcp_packet_loss_o.png)
+![](./images/tcp_packet_loss_t.png)
 
+发送方的处理逻辑是一致的。超时之后，直接重传即可(重传的数据不会丢失)，不需要区分情况
 
+6 . 如果**乱序**到达怎么办？
 
+![](./images/tcp_out_order.png)
 
+对于发送方，收到了一个应答segASN=x时，发送方是怎么理解这个信号的？<br>
+对方已经收到收到了x-1之前的所有数据了。<br>
+**TCP协议是有接收缓冲区的，保证对方接收是有序的**(接收端可以重新整理数据，接收过得数据不再接收)
 
+**如果超时之后，重传对方仍然没有收到，怎么办？**<br>
+继续重传，直到到达一个阈值（假设6次）。如果6次，我都没有收到应答。我就认为不需要再努力的，放弃：
 
+1. 尽人事，试图通知对方，链接异常关闭了---通过发送一个reset segment(另一种)。<br>
+rst = 1，reset segment<br>
+rst = 0，不是reset segment<br>
+1. 通过我们的应用层，数据发送失败了。(Java中是通过异常的方式通知的，会收到一个IOException(SocketException)描述reset connection)
 
 
 ## 三、域名解析及为什么选用UDP协议 ##
