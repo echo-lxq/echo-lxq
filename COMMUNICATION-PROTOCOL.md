@@ -131,6 +131,8 @@ rst = 1，reset segment<br>
 rst = 0，不是reset segment<br>
 1. 通过我们的应用层，数据发送失败了。(Java中是通过异常的方式通知的，会收到一个IOException(SocketException)描述reset connection)
 
+https://blog.csdn.net/qq_57574258/article/details/123024217
+
 
 ## 三、域名解析及为什么选用UDP协议 ##
 1.
