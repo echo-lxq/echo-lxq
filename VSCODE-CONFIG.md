@@ -77,3 +77,18 @@
 > 组件名 - VS Code ES7 React/Redux/React-Native/JS snippets
 > 
 > 快捷键 - 输入rcc + 回车  =  生成类组件必要代码
+
+## 五、代码语法规则配置-ESlint ##
+
+> 1.插件安装 ESLint
+> 
+> 2.插件扩展配置
+
+![](./images/eslint.png)
+
+添加如下配置：
+
+	"editor.codeActionsOnSave": {
+        "source.fixAll.eslint":true 
+    },
+
