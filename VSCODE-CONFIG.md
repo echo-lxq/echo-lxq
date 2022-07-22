@@ -92,3 +92,7 @@
         "source.fixAll.eslint":true 
     },
 
+> 3.配置 eslint 进行格式化
+> 
+由于安装最新的 create-react-app 结合 VScode 编辑器即可支持 eslit，但是需要在项目根目录中要添加 .env 这个配置文件，设置 EXTEND_ESLINT=true 这样才会启用 eslint 检测，注意要 重启 vscode
+
