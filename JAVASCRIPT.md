@@ -148,3 +148,133 @@ f1和f2是Foo这个对象的两个实例，这两个对象也有属性 __ _proto
 
 ctrl+shift+I
 
+**14.JS中map()方法！！**
+
+map定义和方法 map()方法返回一个新数组，数组中的元素为原始数组元素调用函数处理的后值。
+
+map()方法按照原始数组元素顺序依次处理元素。
+
+    map() 方法创建一个新数组，其结果是该数组中的每个元素都调用一个提供的函数后返回的结果。
+    var array1 = [1,4,9,16];
+    const map1 = array1.map(x => x *2);
+    console.log(map1);
+
+### 15.深拷贝浅拷贝 ###
+**①.概念**
+
+深拷贝与浅拷贝在其它语言中也经常被提及到，因为它们分别对应着**值拷贝**与**引用拷贝**。 
+
+**深拷贝：**从字面上的意思理解，是指很深的拷贝，到底有多深呢？深到不仅拷贝值，而且还独立开辟了一个空间。我的理解是：拷贝的过程中，独立地开辟了一个空间，这个对象指向这个地址，与原来的对象互不干扰。深拷贝也被称为值拷贝。 
+
+**浅拷贝：**从字面上的意思理解，是指比较浅的拷贝，它与原来的变量仍然指向同一个地址，两者之间相互影响，即其中一个改变会影响另一个的改变。**浅拷贝也被称为引用拷贝**，引用的意思就是取了个别名，例如张三是大名，狗蛋是他的引用，即为小名，张三变了，狗蛋自然也变了，因为他们本质上就是指同一个人
+
+**②.js中的深拷贝(值拷贝)**
+
+js中的基本数据类型：String Number Boolean Null Undefined，在赋值的过程中都是值拷贝.
+例如，let a = 10 ; b = a , 修改其中一个变量的值，不会影响到另一个变量的值
+
+**③.js中的浅拷贝(引用拷贝)**
+
+js中的对象数据类型：Object Array Function Map Set，在赋值过程中都是引用拷贝(指向同一个地址，相当于一个房间多了一个钥匙)
+
+**④.将浅拷贝装换为深拷贝**
+
+## Array深拷贝几种方法 -- slice()方法 ， concat方法 ， ES6语法中使用[...arr] , Array.from方法
+
+## Object的深拷贝 -- Object.assign() ， 万能转换器JSON.parse(JSON.stringify(obj)) ， 
+<br><br>
+1）Array的深拷贝
+
+###slice方法
+
+> slice()操作数组时，不会对原数组有影响，会产出一个新的数组。
+
+	 let arr1 = [1, 42, 5, 6]
+	 let arr2 = arr1.slice()
+	 arr2[0] = 100
+	 console.log(arr1) // [1, 42, 5, 6]
+	 console.log(arr2) // [100, 42, 5, 6]
+
+数组arr2的改变未引起arr1的变化
+
+###concat()方法
+
+> 数组的concat()方法，能够连接两个数组，同样不会改变原来的数组。用一个空数组连接另一个数组，即可实现深拷贝。
+
+	let arr3 = ['cat', 'dog', 'pig']
+	let arr4 = [].concat(arr3)
+	arr3[2] = 'big pig'
+	console.log(arr3) // ['cat', 'dog', 'big pig']
+	console.log(arr4) // ['cat', 'dog', 'pig']
+
+###ES6语法中 ...
+
+> ES6语法中的 …， 我经常在数组的深拷贝中用到。
+
+	let arr5 = [0, 0, 1]
+	let arr6 = [...arr5]
+	arr5[0] = 10000
+	console.log(arr5) // [10000, 0, 1]
+	console.log(arr6) // [0, 0, 1]
+<br><br>
+2）Object的深拷贝
+
+
+###Object.assign()方法
+
+> ES6的Object.assign() Object.assign(target, …sources)用于对象的合并，将源对象中的所有可枚举属性，复制到目标对象中，并返回合并后的目标对象。后来的源对象的属性值，将会覆盖它之前的对象的属性。
+
+	 let person = {
+	     name: 'xia',
+	     age: 25,
+	     height: 160
+	 }
+	 let otherPerson = Object.assign({}, person)
+	 person.age = 30
+	
+	 console.log(person)
+	 console.log(otherPerson)
+
+### 万能转换器（对Array和Object等都适用）
+
+> 前面讲解了 Array和Object的深拷贝方法，但是对于有更深层次的结构关系（数组套数组 数组套对象 对象套对象等），上面的方法就失灵了，可以看下面的例子。
+
+	let personArr = [{name: 'xia'}, {name: 'zhang'}]
+	let otherPersonArr2 = [...personArr]
+	personArr[0].name = 'xia xia'
+	console.log(personArr)
+	console.log(otherPersonArr2)
+
+![](./images/deep_copy.png)
+
+**万能转换器 JSON.parse(JSON.stringify(obj))深拷贝已有对象，它可以深拷贝多层级的，不用担心嵌套问题。**
+
+- JSON.stringfy() 将对象序列化成json对象
+- JSON.parse() 反序列化——将json对象反序列化成js对象
+
+JSON.stingify(obj)将js中的对象转换成JSON字符串
+
+	 let jack = {
+	     name: 'jack'
+	 }
+	 console.log(jack)
+	 console.log(JSON.stringify(jack))
+
+它们在格式上有区别。下图中的第一个是对象，name没有双引号括起来。第二个是json字符串，其中，name用双引号括起来了
+
+![](./images/js_json_copy.png)
+
+**JSON.parse()将json字符串解析成对象**
+
+	 let obj = {
+	     name: '静茹秋叶'
+	 }
+	 console.log('obj: ', obj)
+	 console.log('json string: ', JSON.stringify(obj))
+	
+	 let str = JSON.stringify(obj)
+	 console.log('--------------')
+	 console.log(str)
+	 console.log('str to obj: ', JSON.parse(str))
+
+![](./images/json_stringfy.png)
