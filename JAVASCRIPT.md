@@ -278,3 +278,18 @@ JSON.stingify(obj)将js中的对象转换成JSON字符串
 	 console.log('str to obj: ', JSON.parse(str))
 
 ![](./images/json_stringfy.png)
+
+<br>
+### 16.JS关于promise ###
+
+> ECMAscript 6 原生提供了promise对象
+> 
+> Promise对象代表了未来将要发生的事件，用来传递异步操作的消息
+
+①概述<br>
+Promise是异步编程的一种解决方案，可以代替传统的解决方案--回调函数和事件。ES6统一了用法，并原生提供了Promise对象。作为对象，Promise有一下两个特点：
+
+*1)对象的状态不受外界影响。 
+*2)一旦状态改变了就不会在变，也就是说任何时候Promise都只有一种状态
+
+②Promise的状态
