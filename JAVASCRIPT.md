@@ -293,3 +293,78 @@ Promise是异步编程的一种解决方案，可以代替传统的解决方案-
 *2)一旦状态改变了就不会在变，也就是说任何时候Promise都只有一种状态
 
 ②Promise的状态
+
+### 17.JS箭头函数 ###
+
+> 箭头函数都是匿名函数
+> 
+> 普通函数**可以**是匿名函数
+
+	// 具名函数
+	function func(){
+	  // code
+	}
+	 
+	// 匿名函数
+	let func=function(){
+	  // code
+	}
+	
+	// 箭头函数全都是匿名函数
+	let func=()=>{
+	  // code
+	}
+
+> 箭头函数不能用于构造函数，不能使用new
+> 
+> 普通函数可以用于构造函数吗，从此创建对象实例
+
+	function Person(name,age){
+	   this.name=name;
+	   this.age=age;
+	}
+	let admin=new Person("恩诺小弦",18);
+	console.log(admin.name);
+	console.log(admin.age);
+
+> 箭头函数中的this的指向不同
+
+普通函数中this总是指向<a style="color:red;">调用它的对象，</a>如果用作构造函数，this指向<a style="color:red;">创建的对象实例</a>。
+
+箭头函数没有自己的this，它的this是继承而来，默认指向在定义它时所处的对象(宿主对象)。
+
+![](./images/arrow_function_this.png)
+ 
+
+> 其他区别 
+
+- 箭头函数不能Generator函数，不能使用yeild关键字。 
+
+	我们可以理解yield是一个暂停动作，这个暂停动作可以接受上一步的结果作为参数，也可以额将这一阶段执行的结果返回给外部。上面整个做菜过程，是可以临时掺杂其他的事情的，这就是yield的最大作用。
+	了解了yield之后，更能理解generator的存在意义。实际上它和promise一样，是用来解决函数异步调用的。
+
+- 箭头函数不具有prototype原型对象。
+- 箭头函数不具有super。 
+
+	*super 方法
+	
+	super作为函数调用时，代表父类的构造函数。
+	ES6 要求，子类的构造函数必须执行一次super函数。子类B的构造函数之中的super()，代表调用父类的构造函数。
+	注意，super虽然代表了父类A的构造函数，但是返回的是子类B的实例，即super内部的this指的是B的实例，因此super()在这里相当于A.prototype.constructor.call(this)。
+	作为函数时，super()只能用在子类的构造函数之中，用在其他地方就会报错。
+	
+	*super 对象
+	
+	super作为对象时，在普通方法中，指向父类的原型对象，在静态方法中，指向父类。
+	由于super指向父类的原型对象，所以定义在父类实例上的方法或属性，是无法通过super调用的。ES6 规定，在子类普通方法中通过super调用父类的方法时，方法内部的this指向当前的子类实例。由于this指向子类实例，所以如果通过super对某个属性赋值，这时super就是this，赋值的属性会变成子类实例的属性。
+	如果super作为对象，用在静态方法之中，这时super将指向父类，而不是父类的原型对象。在子类的静态方法中通过super调用父类的方法时，方法内部的this指向当前的子类，而不是子类的实例。
+
+- 箭头函数不具有new.target。 
+
+	new.target允许你检测函数或构造方法是否是通过new运算符调用的，若函数或构造方法是由new调用的，则new.target属性的值指向该函数或构造函数，否则值为undefined。
+
+> 总结：
+
+- 箭头函数的 this 永远指向其上下文的 this ，任何方法都改变不了其指向，如 call() , bind() , apply() 
+
+- 普通函数的this指向调用它的那个对象
