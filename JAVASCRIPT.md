@@ -441,4 +441,67 @@ Promise是异步编程的一种解决方案，可以代替传统的解决方案-
 	
 	})('cat')('dog')('pig');
 
+链式调用： 例
 
+$('text’).setStyle('color', 'red').show();
+
+一般的函数调用和链式调用的区别：<a style="color:red;">链式调用完方法后，return this返回当前调用方法的对象<a>。
+
+<a style="color:black">(1)先创建一个简单的类</a>
+
+	//创建一个bird类
+	function Bird(name) {
+        this.name=name;
+        this.run=function () {
+        document.write(name+" "+"start run;");
+                }
+        this.stopRun=function () {
+         document.write(name+" "+"start run;");
+                }
+        this.sing=function () {
+            document.write(name+" "+"start sing;");
+        }
+        this.stopSing=function () {
+            document.write(name+" "+"start stopSing;");
+        }
+    }
+(2)使用方式：一般的调用方式
+
+ 	var bird=new Bird("测试");
+    bird.run();
+    birdbird.sing();
+    bird.stopSing();
+    bird.stopRun();
+（3）总结，该种方式有一个弊端就是：多次重复使用一个对象变量
+然后，我们再来看看将上述改成链式调用的格式
+
+(1)在创建的简单类中加上return this，如下
+
+	//创建一个bird类
+   
+	 function Bird(name) {
+        this.name=name;
+        this.run=function () {
+            document.write(name+" "+"start run;");
+            return this;// return this返回当前调用方法的对象。
+        }
+        this.stopRun=function () {
+            document.write(name+" "+"start run;");
+            return this;
+        }
+        this.sing=function () {
+            document.write(name+" "+"start sing;");
+            return this;
+        }
+        this.stopSing=function () {
+            document.write(name+" "+"start stopSing;");
+            return this;
+        }
+    }
+
+(2)使用链式调用（连缀的方式）
+
+	var bird=new Bird("测试");
+    bird.run().sing().stopSing().stopRun();//结果为;测试 start run;测试 start sing;测试 start stopSing;测试 start run;
+
+(3)总结此种方式的调用结果与一般的调用方式产生的结果一样，优点是：链式调用这种风格有助于简化代码的编写工作，让代码更加简洁、易读，同时也避免多次重复使用一个对象变量
