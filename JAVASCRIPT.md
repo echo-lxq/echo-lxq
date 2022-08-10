@@ -368,3 +368,77 @@ Promise是异步编程的一种解决方案，可以代替传统的解决方案-
 - 箭头函数的 this 永远指向其上下文的 this ，任何方法都改变不了其指向，如 call() , bind() , apply() 
 
 - 普通函数的this指向调用它的那个对象
+
+### 18.匿名函数的应用 ###
+
+1.绑定事件
+
+	<input type="button" value="点击" id="btn">
+	
+	//javascript
+	var btn=document.querySelector("#btn");    //querySelector是H5中新增的查找dom元素的方法
+	    		btn.οnclick=function(){
+	    			alert("");
+	    		}
+
+2.应用对象
+
+	var obj={
+	
+	    animal:"汤姆猫",
+	
+	    voice:"喵喵喵~~",
+	
+	    CAT:function(){
+	
+	        return "我是"+this.animal+"，我会"+this.voice+"叫！";
+	
+	    }
+	
+	};
+	
+	alert(obj.CAT());
+
+3.应用函数表达式
+
+	//将匿名函数赋值给变量cat
+	var cat=function(){
+	
+	    return "喵喵喵~~"
+	}
+	//调用方式与调用普通函数一样
+	alert(cat());
+
+4.回调函数的应用
+
+	setInterval(function(){
+	
+	    console.log("我是每5秒执行一次的回调函数");
+	},5000);
+
+5.返回值
+
+	function cat(){
+	    //返回匿名函数
+	    return function(){
+	
+	        return "喵喵喵~~";
+	    }
+	}
+	//调用匿名函数
+	alert(cat()());
+	//或
+	var mao=cat();
+	alert(mao());
+
+6.链式调用
+
+	(function(animal) { 
+	
+	alert(animal); 
+	
+	return arguments.callee; 
+	
+	})('cat')('dog')('pig');
+
+
