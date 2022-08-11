@@ -505,3 +505,20 @@ $('text’).setStyle('color', 'red').show();
     bird.run().sing().stopSing().stopRun();//结果为;测试 start run;测试 start sing;测试 start stopSing;测试 start run;
 
 (3)总结此种方式的调用结果与一般的调用方式产生的结果一样，优点是：链式调用这种风格有助于简化代码的编写工作，让代码更加简洁、易读，同时也避免多次重复使用一个对象变量
+
+### 19.filter使用(includes) ###
+
+> 例:找到数组中包含a的
+
+    /**
+     * filter 不会改变原对象
+     */
+    
+    var arr = ["aaa","abc","bcc"]
+
+	//前面为数组内元素，后面为回调方法，当返回true时候不会过滤掉此数组项
+    
+    var newarr = arr.filter(item=>item.includes("a"))
+    
+    console.log(newarr) 输出为 ["aaa","abc"]
+
