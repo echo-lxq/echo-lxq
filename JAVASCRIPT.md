@@ -522,3 +522,50 @@ $('text’).setStyle('color', 'red').show();
     
     console.log(newarr) 输出为 ["aaa","abc"]
 
+### 20.关于localStorage ###
+
+**HTML API**
+
+localstorage 在浏览器的 API 有两个：localStorage 和sessionStorage，存在于 window 对象中：localStorage 对应 window.localStorage，sessionStorage 对应 window.sessionStorage。
+
+localStorage 和 sessionStorage 的区别主要是在于其生存期。
+
+**基本使用方法**
+
+![](./images/localStroage.png)
+
+- 这里的作用域指的是：如何隔离开不同页面之间的localStorage（不能在百度的页面上能读到腾讯的localStorage）。
+
+- localStorage只要在相同的协议、相同的主机名、相同的端口下，就能读取/修改到同一份localStorage数据。
+
+- sessionStorage比localStorage更严苛一点，除了协议、主机名、端口外，还要求在同一窗口（也就是浏览器的标签页）下。
+
+**生存期**
+
+- localStorage理论上来说是永久有效的，即不主动清空的话就不会消失，即使保存的数据超出了浏览器所规定的大小，也不会把旧数据清空而只会报错。但需要注意的是，在移动设备上的浏览器或各Native App用到的WebView里，localStorage都是不可靠的，可能会因为各种原因（比如说退出App、网络切换、内存不足等原因）被清空。
+- sessionStorage的生存期顾名思义，类似于session，只要关闭浏览器（也包括浏览器的标签页），就会被清空。由于sessionStorage的生存期太短，因此应用场景很有限，但从另一方面来看，不容易出现异常情况，比较可靠。
+
+**容量限制**
+
+目前业界基本上统一为5M，已经比cookies的4K要大很多了。
+
+**域名限制**
+
+由于浏览器的安全策略，localstorage是无法跨域的，也无法让子域名继承父域名的localstorage数据，这点跟cookies的差别还是蛮大的。
+
+**异常处理**
+
+localstorage在目前的浏览器环境来说，还不是完全稳定的，可能会出现各种各样的bug，一定要考虑好异常处理。我个人认为localstorage只是资源本地化的一种优化手段，不能因为使用localstorage就降低了程序的可用性，那种只是在console里输出点错误信息的异常处理我是绝对反对的。localstorage的异常处理一般用try/catch来捕获/处理异常。
+
+**如何测试用户当前浏览器是否支持localstorage**
+
+目前普遍的做法是检测window.localStorage是否存在，但某些浏览器存在bug，虽然"支持"localstorage，但在实际过程中甚至可能出现无法setItem()这样的低级bug。因此我建议，可以通过在try/catch结构里set/get一个测试数据有无出现异常来判断该浏览器是否支持localstorage
+
+**浏览器兼容性**
+
+![](./images/localstaroge_compatible.png)
+
+**在ios设备上无法重复setItem()**
+
+> 另外，在iPhone/iPad上有时设置setItem()时会出现诡异的QUOTA_EXCEEDED_ERR错误，这时一般在setItem之前，先removeItem()就ok了。
+
