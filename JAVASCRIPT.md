@@ -569,3 +569,21 @@ localstorage在目前的浏览器环境来说，还不是完全稳定的，可�
 
 > 另外，在iPhone/iPad上有时设置setItem()时会出现诡异的QUOTA_EXCEEDED_ERR错误，这时一般在setItem之前，先removeItem()就ok了。
 
+### 21.async、await ###
+
+一、async用法
+
+async作为一个关键字放在函数前面，用于表示函数是一个异步函数。异步函数也就意味着**函数的执行不会阻塞后面代码的执行。**
+
+调用：异步函数也是函数，怎么调用函数就怎么调用它，直接加括号就可以了
+
+async函数返回一个promise对象，如果获取到promise返回值，我们应该用then方法
+
+![](./images/js-async.jpg)
+
+你可能注意到控制台中的Promise 有一个resolved，这是async 函数内部的实现原理。如果async 函数中有返回一个值，当调用该函数时，内部会调用Promise.solve() 方法把它转化成一个promise 对象作为返回，但如果timeout 函数内部抛出错误呢？ 那么就会调用Promise.reject() 返回一个promise 对象， 这时修改一下timeout 函数
+
+
+# 关于 promise 与 异步编成问题！！ #
+
+https://blog.csdn.net/qq_47443027/article/details/118763485
