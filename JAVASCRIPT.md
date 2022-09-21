@@ -583,6 +583,39 @@ async函数返回一个promise对象，如果获取到promise返回值，我们�
 
 你可能注意到控制台中的Promise 有一个resolved，这是async 函数内部的实现原理。如果async 函数中有返回一个值，当调用该函数时，内部会调用Promise.solve() 方法把它转化成一个promise 对象作为返回，但如果timeout 函数内部抛出错误呢？ 那么就会调用Promise.reject() 返回一个promise 对象， 这时修改一下timeout 函数
 
+### 22.babel含义及作用 ###
+
+Babel含义：
+
+> Babel 是一个 JavaScript 编译器，它能让开发者在开发过程中，直接使用各类方言（如 TS、Flow、JSX）或新的语法特性，而不需要考虑运行环境，因为 Babel 可以做到按需转换为低版本支持的代码；Babel 内部原理是将 JS 代码转换为 AST，对 AST 应用各种插件进行处理，最终输出编译后的 JS 代码。
+
+在开发中我们在写es6+语法的时候是不是很方便，什么promise、async await`，可是es6+语法写的虽然很酸爽，但是浏览器他不兼容啊，你想想你写的代码在浏览器上跑不起来，在好的语法在好的特性又有什么用？
+
+这个时候Babel这样一个工具出来了，他可以将我们写的es6+语法转换为浏览器兼容的语法，比如将箭头函数转换为普通函数，有了这样一个工具我们就即可以写酸爽的语法，又可以让使浏览器兼容。
+
+#### 三大步骤 ####
+
+![](./images/babel.png)
+
+- 最常见的 @babel/preset-env 预设，包含了一组最新浏览器已支持的 ES 语法特性，并且可以通过配置目标运行环境范围，自动按需引入插件。
+
+- 解析阶段：Babel 默认使用 @babel/parser 将代码转换为 AST。解析一般分为两个阶段：词法分析和语法分析。
+
+- 转换阶段：Babel 使用 @babel/traverse 提供的方法对 AST 进行深度优先遍历，调用插件对关注节点的处理函数，按需对 AST 节点进行增删改操作。
+
+- 生成阶段：Babel 默认使用 @babel/generator 将上一阶段处理后的 AST 转换为代码字符串。
+
+- **Babel 插件系统**
+- Babel 的核心模块 @babel/core，@babel/parser，@babel/traverse 和 @babel/generator 提供了完整的编译流程。而具体的转换逻辑需要插件来完成。
+
+- 在使用 Babel 时，我们可通过配置文件指定 plugin 和 preset。而 preset 可以是 plugin 和 preset 以及其他配置的集合。Babel 会递归读取 preset，最终获取一个大的 plugins 数组，用于后续使用。
+
+- 常见 presets
+
+- @babel/preset-env
+- @babel/preset-typescript
+- @babel/preset-react
+
 
 # 关于 promise 与 异步编成问题！！ #
 
