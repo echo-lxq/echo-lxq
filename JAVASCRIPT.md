@@ -616,6 +616,50 @@ Babel含义：
 - @babel/preset-typescript
 - @babel/preset-react
 
+### 23.闭包 ###
+
+	console.log("----------简单的闭包----------")
+
+        function closeFunction() {
+            console.log("闭包内部")
+
+            let i = 1;
+
+            function inner() {
+                i++
+                console.log(i)
+            }
+            return inner
+        }
+
+        var f1 = closeFunction();
+        f1()  //输出2
+        f1()  //输出3
+        var f2 = closeFunction()
+        f2()  //输出2
+        f2()  //输出3
+
+        //总结：inner函数中的i就是行程闭包的”元凶“，由于inner函数没有自己的i变量，所以会引用
+        //     外部作用域(closeFunction作用域)的i变量，因此当inner函数被返回后，closeFunction
+        //     的i变量得不到释放，因为f对其有引用，因此i变量一直会在内存中，知道f=null
+
+        //可以利用闭包保存函数的变量，并且外部无法直接访问到内部变量，避免定义过多全局变量
+
+
+
+    console.log("----------非闭包效果----------")
+
+        function simpleFunction() {
+            console.log("简单函数")
+            let i = 1;
+            i++;
+            console.log(i)
+        }
+        simpleFunction()  //输出2
+        simpleFunction()  //输出2
+
+    console.log("----------非闭包应用场景----------")
+
 
 # 关于 promise 与 异步编成问题！！ #
 
