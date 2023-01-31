@@ -660,6 +660,89 @@ Babel含义：
 
     console.log("----------非闭包应用场景----------")
 
+## 24.ES6 ##
+
+> 总结es6相关的知识点
+
+### 字符串拼接 ###
+使用反引号 ``
+
+例子：
+
+	let str='我是佩奇'
+	console.log(`你是野猪${str}`)
+	//结果 你是野猪我是佩奇
+
+### ES6中数组新语法 ###
+
+#### map() ####
+数组.map()也就是映射。通俗地讲就是遍历数组，且修改每一个数组元素，返回的结果是一个新的数组。举个简单的例子，假设商场打折，给每件商品打8折，其中arr数组中是所有商品的价格：
+
+	let arr = [89, 50, 99, 45, 100, 30, 60, 30]
+	console.log(arr.map(item => item * 0.8))//0:71.2 1: 40 2: 79.2 3: 36 4: 80 5: 24 6: 48 7: 24 length: 8
+如果难理解的话，可以看下所示的：
+
+	let arr = [89, 50, 99, 45, 100, 30, 60, 30]
+	let newArr = arr.map((item) => {
+	    return item * 0.8
+	})
+	console.log(newArr)//0:71.2 1: 40 2: 79.2 3: 36 4: 80 5: 24 6: 48 7: 24 length: 8
+#### 2.filter() ####
+数组.filter()是筛选数组的，将符合条件的元素放入新数组中，如果存在，返回所有满足条件的新数组，不存在，则返回空数组，且这个方法的执行次数等于数组的长度。举个简单的例子，找到数组中所有的负数：
+
+	let arr1 = [12, 23, -2, 45, 2, 13, -9]
+	console.log(arr1.filter(item => item < 0)) //0:-2  1:-9  length:2
+	let arr2 = [1, 2, 3, 4]
+	console.log(arr2.filter(item => item < 0))//[]
+#### 3.forEach() ####
+数组.forEach()等价于for(let i=0;i<arr.length;i++){........}本质就是对数组的遍历
+
+	let arr = [10, 23, 41, 23, 56]
+	arr.forEach((item, index) => {
+	    console.log(index, item)//0 10    1 23     2 41    3 23      4 56
+	})
+### 4.some() ###
+数组.some()是用来检测数组中是否有符合条件的元素，返回的结果是布尔型，如果是true表示有符合条件的元素，如果是false则表示没有符合条件的元素，应用场景：非空判断。举个简单的例子，判断一个数组是否存在负数
+
+	let arr1 = [12, 1, 34, -2, 4]
+	console.log(arr1.some(item => item < 0)) //true
+	let arr2 = [1, 2, 3, 4]
+	console.log(arr2.some(item => item < 0)) //false
+### 5.every（） ###
+数组.every()是用来检测是否所有的元素都满足条件，如果所有元素都满足条件，返回结果为true，反之返回false，这个思想就类似于开关思想，和some()是相反的。举例：判断数组是不是都是正数
+
+	let arr = [1, 3, 2, 5, -2, 6]
+	console.log(arr.every(item => item > 0)) //false
+### 6.findIndex() ###
+数组.findIndex()是用来查找元素的，如果元素存在返回该元素的下标，如果不存在则返回-1，和indexOf作用一样，区别在于indexOf只能查找值类型的数据，而findIndex可以查找引用类型数据。举例：在数组中找李四和小明
+
+	let arr = [{
+                name: '张三',
+                age: 20
+            },
+            {
+                name: '李四',
+                age: 50
+            },
+            {
+                name: '王五',
+                age: 20
+            }
+        ]
+        /* 查找李四 */
+        console.log(arr.findIndex(item => item.name == '李四')) //1
+        console.log(arr.findIndex(item => item.name == '小明')) //-1
+
+### 7.reduce（） ###
+数组.reduce()是数组累加器，对数组每一个元素执行一次回调函数，累加最后一次回调的结果，应用场景：求总价。以下面这个例子为例进行详细的讲解：
+
+	let arr = [12, 34, 23, 15, 6]
+	console.log(arr.reduce((sum, item) => {
+	return sum + item
+	}, 0)) //90
+因为reduce()，默认下标从1开始，所以需要设置，在reduce里补0，（如果从1开始遍历，遇到空数组会报错）类似于从0下标开始遍历，同样也代表着let sum=0，每次将返回的值赋值给sum，等价于sum=sum+item，每次执行一次，返回的结果将作为下一轮sum的值，且最终返回最后一次执行的结果
+
+
 
 # 关于 promise 与 异步编成问题！！ #
 
